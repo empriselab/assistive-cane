@@ -90,15 +90,14 @@ class AStar(Planner):
         ####### Insert Code Here #######
         
         # Initialize both open and closed lists
-        open_list = None
-        closed_list = None
+        open_list = []
+        closed_list = []
         
         # Heapify the open_list
+        heapq.heapify(open_list) 
 
         # Add start node to heap
-
-        # Remove the following line when done with above
-        return None
+        heapq.heappush(open_list, start_node)
 
         ################################
 
@@ -128,12 +127,12 @@ class AStar(Planner):
             ####### Insert Code Here #######
 
             # Get the current node
-            current_node = None
+            current_node = heapq.heappop(open_list)
+            closed_list.append(current_node)
 
             # Found the goal
-            
-            # Remove the following line when done with above
-            return None
+            if current_node == end_node:
+                return self.return_path(current_node)
 
             ################################
 
@@ -156,9 +155,8 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is on the closed list
-                
-                # Remove the following line when done with above
-                return None
+                if child in closed_list:
+                    continue
 
                 ################################
 
@@ -172,17 +170,14 @@ class AStar(Planner):
                 """
                 [Day 3] TODO 4: Implement the following:
                     - Create f, g, and h values for child
-                        NOTE: Combine h_x, h_y and h_direction as the heuristic 
+                        NOTE: sum h_x, h_y and h_direction as the heuristic 
                 """
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
-                child.g = None
-                child.h = None
-                child.f = None
-
-                # Remove the following line when done with above
-                return None
+                child.g = current_node.g + 1
+                child.h = h_x + h_y + h_direction
+                child.f = child.g + child.h
 
                 ################################
 
@@ -197,12 +192,12 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is already in the open list
+                if len([open_node for open_node in open_list if child == open_node and child.g > open_node.g]) > 0:
+                    continue
 
                 # Add the child to the open list
+                heapq.heappush(open_list, child)
 
-                # Remove the following line when done with above
-                return None
-                
                 ################################
 
         warn("Could not find path: Path does not exist")

@@ -233,7 +233,7 @@ if __name__ == '__main__':
     print("Box poses: ")
     print(local_box_poses)
 
-    planner = AStar(3.4,2.44,50,25)
+    planner = AStar(5.0,2.5,50,25)
 
     # find nearest angle
 
