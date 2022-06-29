@@ -129,7 +129,7 @@ class Planner:
     def visualize(self, start = None, goal = None, path = None):
 
         fig = plt.figure(figsize=(40,24), dpi=80)
-        ax = fig.add_subplot(111, aspect='equal')
+        ax = fig.add_subplot(111)
 
         number_in_collision = 0
         for i in range(self.occupancy_grid.shape[0]):
@@ -283,14 +283,16 @@ class Planner:
         return world_path
 
     def solve(self, start, goal, box_poses):
-        
-        self.set_box_poses(box_poses)
 
         # Create start and end node
         start_node = Node(start[0]*self.resolution_x,start[1]*self.resolution_y,start[2])
         start_node.g = start_node.h = start_node.f = 0
         end_node = Node(goal[0]*self.resolution_x,goal[1]*self.resolution_y,goal[2])
         end_node.g = end_node.h = end_node.f = 0
+
+        self.visualize(start_node,end_node)
+        
+        self.set_box_poses(box_poses)
 
         self.visualize(start_node,end_node)
 

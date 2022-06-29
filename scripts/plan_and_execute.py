@@ -230,7 +230,10 @@ if __name__ == '__main__':
     local_box_poses = rospy.wait_for_message(box_topic, PoseArray, timeout=None)
     start_cane_pose = rospy.wait_for_message(cane_topic, Pose, timeout=None)
 
-    planner = AStar(2.0,2.0,50,50)
+    print("Box poses: ")
+    print(local_box_poses)
+
+    planner = AStar(3.4,2.44,50,25)
 
     # find nearest angle
 
@@ -255,8 +258,8 @@ if __name__ == '__main__':
 
     print("Start Direction: ", start_direction)
 
-    goal_cane_pose_x = 1.7
-    goal_cane_pose_y = 1.3
+    goal_cane_pose_x = 2.7
+    goal_cane_pose_y = 0.5
     goal_cane_pose_direction = 0
 
     global path
@@ -277,7 +280,7 @@ if __name__ == '__main__':
     """
     ####### Insert Code Here #######
 
-    cane_command_publisher = None
+    cane_command_publisher = rospy.Publisher('/cane_command', cane_command_msg, queue_size=10)
 
     ################################
 
@@ -287,4 +290,3 @@ if __name__ == '__main__':
 
     rospy.Subscriber(cane_topic, Pose, cane_callback)
     rospy.spin()
-

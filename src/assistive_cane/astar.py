@@ -141,7 +141,7 @@ class AStar(Planner):
             for child in current_node.get_neighbors():
 
                 # Make sure within range
-                if child.x >= self.occupancy_grid.shape[0] or child.y >= self.occupancy_grid.shape[1]:
+                if child.x<0 or child.x >= self.occupancy_grid.shape[0] or child.y<0 or child.y >= self.occupancy_grid.shape[1]:
                     continue
 
                 # Make sure walkable terrain
@@ -172,7 +172,7 @@ class AStar(Planner):
                 """
                 [Day 3] TODO 4: Implement the following:
                     - Create f, g, and h values for child
-                        NOTE: sum h_x, h_y and h_direction as the heuristic 
+                        NOTE: Combine h_x, h_y and h_direction as the heuristic 
                 """
                 ####### Insert Code Here #######
 
