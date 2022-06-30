@@ -27,14 +27,14 @@ Day 5: Demo!
 """
 ####### Insert Code Here #######
 
-MINIMUM_DISTANCE_TARGET_THRESHOLD = 0.225
-MINIMUM_ROTATION_TARGET_THRESHOLD = math.pi/6
+MIN_DISTANCE_THRESHOLD = 0.225
+MIN_ROTATION_THRESHOLD = math.pi/6
 
-FORWARD_CONSTANT_THRESHOLD = 0.3
-FORWARD_ROTATION_MINIMUM_VIBRATION = 0.4
+FORWARD_CONST_THRESHOLD = 0.3
+FORWARD_MIN_VIBRATION = 0.4
 
-ROTATION_CONSTANT_THRESHOLD = math.pi/4
-ROTATION_MINIMUM_VIBRATION = 0.4
+ROTATION_CONST_THRESHOLD = math.pi/4
+ROTATION_MIN_VIBRATION = 0.4
 
 last_command = 0
 
@@ -51,13 +51,13 @@ def cane_callback(cane_pose):
 
 		Deciding Command Type:
 
-			If the position of the cane is at a distance from the target position further than MINIMUM_DISTANCE_TARGET_THRESHOLD: 
-				If the orientation of the cane differs from the direction towards the target position outside MINIMUM_ROTATION_TARGET_THRESHOLD:
+			If the position of the cane is at a distance from the target position further than MIN_DISTANCE_THRESHOLD: 
+				If the orientation of the cane differs from the direction towards the target position outside MIN_ROTATION_THRESHOLD:
 					Rotate (left or right) the cane such that it faces the target position
 				Else:
 					Move forward towards the target position 
 			Else:
-				If the orientation of the cane differs from the target orientation by more than MINIMUM_ROTATION_TARGET_THRESHOLD:
+				If the orientation of the cane differs from the target orientation by more than MIN_ROTATION_THRESHOLD:
 					Rotate (left or right) the cane towards the target orientation
 				Else:
 					You have reached target waypoint! Start tracking the next target waypoint (if any left)
@@ -66,17 +66,17 @@ def cane_callback(cane_pose):
 		
 			Move Forward:
 
-				If the distance from target position is greater than FORWARD_CONSTANT_THRESHOLD:
+				If the distance from target position is greater than FORWARD_CONST_THRESHOLD:
 					forward vibration magnitude = 1
 				Else:
-					forward vibration magnitude = FORWARD_ROTATION_MINIMUM_VIBRATION + (1-FORWARD_ROTATION_MINIMUM_VIBRATION) * distance from target/FORWARD_CONSTANT_THRESHOLD
+					forward vibration magnitude = FORWARD_MIN_VIBRATION + (1-FORWARD_MIN_VIBRATION) * distance from target/FORWARD_CONST_THRESHOLD
 
 			Rotate:
 
-				If the orientation of the cane differs from the target orientation by more than ROTATION_CONSTANT_THRESHOLD:
+				If the orientation of the cane differs from the target orientation by more than ROTATION_CONST_THRESHOLD:
 					rotation (left or right) vibration magnitude = 1
 				Else:
-					rotation (left or right) vibration magnitude = ROTATION_ROTATION_MINIMUM_VIBRATION + (1-ROTATION_ROTATION_MINIMUM_VIBRATION) * distance from target/ROTATION_CONSTANT_THRESHOLD
+					rotation (left or right) vibration magnitude = ROTATION_MIN_VIBRATION + (1-ROTATION_MIN_VIBRATION) * distance from target/ROTATION_CONST_THRESHOLD
 
 	Parameters
 	----------
@@ -117,38 +117,30 @@ def cane_callback(cane_pose):
 		if current_yaw < target_yaw:
 
 			if target_yaw - current_yaw < math.pi: #move left
-				if target_yaw - current_yaw > ROTATION_CONSTANT_THRESHOLD:
-					print("Case 1")
+				if target_yaw - current_yaw > ROTATION_CONST_THRESHOLD:
 					return (1.0, 0.0)
 				else:
-					print("Case 2")
-					return (ROTATION_MINIMUM_VIBRATION + (1-ROTATION_MINIMUM_VIBRATION)*(target_yaw - current_yaw)/ROTATION_CONSTANT_THRESHOLD, 0.0)
+					return (ROTATION_MIN_VIBRATION + (1-ROTATION_MIN_VIBRATION)*(target_yaw - current_yaw)/ROTATION_CONST_THRESHOLD, 0.0)
 			else: # move right
-				if current_yaw + 2*math.pi - target_yaw > ROTATION_CONSTANT_THRESHOLD:
-					print("Case 3")
+				if current_yaw + 2*math.pi - target_yaw > ROTATION_CONST_THRESHOLD:
 					return (0.0, 1.0)
 				else:
-					print("Case 4")
-					return (0.0, ROTATION_MINIMUM_VIBRATION + (1-ROTATION_MINIMUM_VIBRATION)*(current_yaw + 2*math.pi - target_yaw)/ROTATION_CONSTANT_THRESHOLD)
+					return (0.0, ROTATION_MIN_VIBRATION + (1-ROTATION_MIN_VIBRATION)*(current_yaw + 2*math.pi - target_yaw)/ROTATION_CONST_THRESHOLD)
 		
 		# TODO Rajat document this
 		else:   
 
 			if current_yaw - target_yaw < math.pi: # move right
-				if current_yaw - target_yaw > ROTATION_CONSTANT_THRESHOLD:
-					print("Case 5")
+				if current_yaw - target_yaw > ROTATION_CONST_THRESHOLD:
 					return (0.0, 1.0)
 				else:
-					print("Case 6")
-					return (0.0, ROTATION_MINIMUM_VIBRATION + (1-ROTATION_MINIMUM_VIBRATION)*(current_yaw - target_yaw)/ROTATION_CONSTANT_THRESHOLD)
+					return (0.0, ROTATION_MIN_VIBRATION + (1-ROTATION_MIN_VIBRATION)*(current_yaw - target_yaw)/ROTATION_CONST_THRESHOLD)
 
 			else: # move left
-				if target_yaw + 2*math.pi - current_yaw > ROTATION_CONSTANT_THRESHOLD:
-					print("Case 7")
+				if target_yaw + 2*math.pi - current_yaw > ROTATION_CONST_THRESHOLD:
 					return (1.0, 0.0)
 				else:
-					print("Case 8")
-					return (ROTATION_MINIMUM_VIBRATION + (1-ROTATION_MINIMUM_VIBRATION)*(target_yaw + 2*math.pi - current_yaw)/ROTATION_CONSTANT_THRESHOLD, 0.0)
+					return (ROTATION_MIN_VIBRATION + (1-ROTATION_MIN_VIBRATION)*(target_yaw + 2*math.pi - current_yaw)/ROTATION_CONST_THRESHOLD, 0.0)
 	
 	box_topic = "/boxes_state"
 	local_box_poses = rospy.wait_for_message(box_topic, PoseArray, timeout=None)
@@ -157,15 +149,15 @@ def cane_callback(cane_pose):
 	global current_index
 	global path 
 	global last_command
-	global MINIMUM_DISTANCE_TARGET_THRESHOLD
-	global MINIMUM_ROTATION_TARGET_THRESHOLD
+	global MIN_DISTANCE_THRESHOLD
+	global MIN_ROTATION_THRESHOLD
 
 	if last_command == 0:
-		MINIMUM_DISTANCE_TARGET_THRESHOLD = 0.1
-		MINIMUM_ROTATION_TARGET_THRESHOLD = math.pi/6
+		MIN_DISTANCE_THRESHOLD = 0.1
+		MIN_ROTATION_THRESHOLD = math.pi/6
 	else:
-		MINIMUM_DISTANCE_TARGET_THRESHOLD = 0.225
-		MINIMUM_ROTATION_TARGET_THRESHOLD = math.pi/8
+		MIN_DISTANCE_THRESHOLD = 0.225
+		MIN_ROTATION_THRESHOLD = math.pi/8
 
 
 	if current_index == len(path):
@@ -192,14 +184,13 @@ def cane_callback(cane_pose):
 	(_, _, cane_yaw) = euler_from_quaternion([cane_pose.orientation.x, cane_pose.orientation.y, cane_pose.orientation.z, cane_pose.orientation.w])
 	(_, _, waypoint_target_yaw) = euler_from_quaternion([waypoint_target.orientation.x, waypoint_target.orientation.y, waypoint_target.orientation.z, waypoint_target.orientation.w])
 
-	if (waypoint_target.position.x - cane_pose.position.x)**2 + (waypoint_target.position.y - cane_pose.position.y)**2 > MINIMUM_DISTANCE_TARGET_THRESHOLD**2:
+	if (waypoint_target.position.x - cane_pose.position.x)**2 + (waypoint_target.position.y - cane_pose.position.y)**2 > MIN_DISTANCE_THRESHOLD**2:
 
 		theta = math.atan2(waypoint_target.position.y - cane_pose.position.y, waypoint_target.position.x - cane_pose.position.x)
 
-		if abs(theta - cane_yaw) > MINIMUM_ROTATION_TARGET_THRESHOLD:
+		if abs(theta - cane_yaw) > MIN_ROTATION_THRESHOLD:
 			(vibration_left, vibration_right) = vibration_command(cane_yaw, theta)
 			
-			print("Type a")
 			cane_command = cane_command_msg()
 			cane_command.vibration_forward = 0
 			cane_command.vibration_left = vibration_left
@@ -213,23 +204,20 @@ def cane_callback(cane_pose):
 			cane_command.vibration_left = 0
 			cane_command.vibration_right = 0
 
-			if (waypoint_target.position.x - cane_pose.position.x)**2 + (waypoint_target.position.y - cane_pose.position.y)**2 > FORWARD_CONSTANT_THRESHOLD**2:
+			if (waypoint_target.position.x - cane_pose.position.x)**2 + (waypoint_target.position.y - cane_pose.position.y)**2 > FORWARD_CONST_THRESHOLD**2:
 				cane_command.vibration_forward = 1.0
-				print("Type b")
 			else:
-				cane_command.vibration_forward = FORWARD_ROTATION_MINIMUM_VIBRATION + (1-FORWARD_ROTATION_MINIMUM_VIBRATION)*math.sqrt((waypoint_target.position.x - cane_pose.position.x)**2 + (waypoint_target.position.y - cane_pose.position.y)**2)/FORWARD_CONSTANT_THRESHOLD
-				print("Type c")
+				cane_command.vibration_forward = FORWARD_MIN_VIBRATION + (1-FORWARD_MIN_VIBRATION)*math.sqrt((waypoint_target.position.x - cane_pose.position.x)**2 + (waypoint_target.position.y - cane_pose.position.y)**2)/FORWARD_CONST_THRESHOLD
 
 			cane_command_publisher.publish(cane_command)
 
 			last_command = 0
 
 
-	elif abs(waypoint_target_yaw - cane_yaw) > MINIMUM_ROTATION_TARGET_THRESHOLD:
+	elif abs(waypoint_target_yaw - cane_yaw) > MIN_ROTATION_THRESHOLD:
 
 		(vibration_left, vibration_right) = vibration_command(cane_yaw, waypoint_target_yaw)
 
-		print("Type d")
 		cane_command = cane_command_msg()
 		cane_command.vibration_forward = 0
 		cane_command.vibration_left = vibration_left
@@ -255,10 +243,12 @@ def cane_callback(cane_pose):
 
 if __name__ == '__main__':
 
-	rospy.init_node('smart_cane')
+	rospy.init_node('smart_cane_planner')
 	# Define your image topic
 	box_topic = "/boxes_state"
 	cane_topic = "/cane_state"
+
+	print('Waiting for msg')
 
 	local_box_poses = rospy.wait_for_message(box_topic, PoseArray, timeout=None)
 	start_cane_pose = rospy.wait_for_message(cane_topic, Pose, timeout=None)
