@@ -174,8 +174,8 @@ class AStar(Planner):
                 h_x = abs(child.x - end_node.x)
                 h_y = abs(child.y - end_node.y)
                 h_direction = abs(child.direction - end_node.direction)
-                h_euclid = math.sqrt(h_x**2 + h_y**2 + h_direction**2)
-                eps = .25
+                #h_euclid = math.sqrt(h_x**2 + h_y**2 + h_direction**2)
+                eps = 2
 
                 if h_direction == 3:
                     h_direction = 1
@@ -186,9 +186,13 @@ class AStar(Planner):
                         NOTE: Combine h_x, h_y and h_direction as the heuristic 
                 """
                 ####### Insert Code Here #######
-
                 # Create the f, g, and h values
-                child.g = current_node.g + 1 # cost of every action == 1
+                if child.direction == current_node.direction:
+                    cost = 1
+                else:
+                    cost = 3
+
+                child.g = current_node.g + cost # cost of every action == 1
                 child.h = eps * (h_x + h_y + h_direction)
                 child.f = child.g + child.h
 

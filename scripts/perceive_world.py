@@ -256,6 +256,8 @@ def main():
     # Initialize node
     rospy.init_node('perceive_world')
 
+    print("waiting for msg")
+
     image_sub1 = message_filters.Subscriber("/camera1/color/image_raw", Image, queue_size = 1,  buff_size = 65536*100)
     info_sub1 = message_filters.Subscriber("/camera1/color/camera_info", CameraInfo, queue_size = 1,  buff_size = 65536*100)
     image_sub2 = message_filters.Subscriber("/camera2/color/image_raw", Image, queue_size = 1,  buff_size = 65536*100)
