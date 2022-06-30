@@ -90,15 +90,18 @@ class AStar(Planner):
         ####### Insert Code Here #######
         
         # Initialize both open and closed lists
-        open_list = None
-        closed_list = None
+        open_list = []
+        closed_list = []
         
         # Heapify the open_list
-
+        heapq.heapify(open_list)
         # Add start node to heap
+        heapq.heappush(open_list,start_node)
+
+
 
         # Remove the following line when done with above
-        return None
+        
 
         ################################
 
@@ -127,14 +130,18 @@ class AStar(Planner):
             """
             ####### Insert Code Here #######
 
+
+
             # Get the current node
-            current_node = None
+            current_node = heapq.heappop(open_list)
+
 
             # Found the goal
-            
-            # Remove the following line when done with above
-            return None
+            closed_list.append(current_node)
 
+            if current_node==end_node:
+                return self.return_path(current_node)   
+            # Remove the following line when done with above
             ################################
 
             # Loop through children
@@ -153,12 +160,17 @@ class AStar(Planner):
                 [Day 3] TODO 3: Implement the following:
                     - Check if child is in closed list. If so continue to next iteration of for loop
                 """
+
+
+
                 ####### Insert Code Here #######
 
                 # Child is on the closed list
+                if child in closed_list:
+                    continue
                 
                 # Remove the following line when done with above
-                return None
+      
 
                 ################################
 
@@ -177,12 +189,11 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
-                child.g = None
-                child.h = None
-                child.f = None
+                child.g = current_node.g + 1
+                child.h = math.sqrt(h_x**2+h_y**2)
+                child.f = child.g+child.h*(2.5) 
 
                 # Remove the following line when done with above
-                return None
 
                 ################################
 
@@ -197,12 +208,22 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is already in the open list
+                #maxel=findMaximumElement(open_list, 
+                default=True
+                if child in open_list:
+                    for n in open_list:
+                        if n.g>child.g:
+                            default=False
+                    if default==True:
+                        continue
+
 
                 # Add the child to the open list
+                else:
+                    heapq.heappush(open_list,child)
 
-                # Remove the following line when done with above
-                return None
-                
+
+                # Remove the following line when done with above                
                 ################################
 
         warn("Could not find path: Path does not exist")
