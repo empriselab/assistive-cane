@@ -2,6 +2,7 @@
 
 import math
 import rospy
+import time # we added this
 
 from warnings import warn
 import heapq
@@ -90,15 +91,18 @@ class AStar(Planner):
         ####### Insert Code Here #######
         
         # Initialize both open and closed lists
-        open_list = None
-        closed_list = None
+        open_list =[]
+        closed_list = []
         
         # Heapify the open_list
+        heapq.heapify(open_list)
+    
 
         # Add start node to heap
+        heapq.heappush(open_list,start_node)
 
         # Remove the following line when done with above
-        return None
+        #return None
 
         ################################
 
@@ -107,18 +111,21 @@ class AStar(Planner):
         max_iterations = 1000000
 
         # Loop until you find the end
+        startTimer = time.perf_counter()
         while len(open_list) > 0:
 
             outer_iterations += 1
 
+           
             if outer_iterations%1000 == 0:
                 print("pathfinding ...")
+
 
             if outer_iterations > max_iterations:
               # if we hit this point return the path such as it is
               # it will not contain the destination
               warn("Could not find path: Exceeded maximum number of iterations")
-              return return_path(current_node)       
+              return self.return_path(current_node)       
             
             """
             [Day 3] TODO 2: Implement the following:
@@ -128,12 +135,13 @@ class AStar(Planner):
             ####### Insert Code Here #######
 
             # Get the current node
-            current_node = None
-
+            current_node = heapq.heappop(open_list)
+            closed_list.append(current_node)
             # Found the goal
-            
+            if current_node == end_node:
+                return self.return_path(current_node)
             # Remove the following line when done with above
-            return None
+            
 
             ################################
 
@@ -156,9 +164,11 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is on the closed list
+                if child in closed_list:
+                    continue
                 
                 # Remove the following line when done with above
-                return None
+        
 
                 ################################
 
@@ -177,12 +187,15 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
-                child.g = None
-                child.h = None
-                child.f = None
+                # child.g = current_node.g + math.sqrt((child.x - current_node.x)**2 + (child.y - current_node.y)**2)
+                # child.h = math.sqrt((child.x - end_node.x)**2 + (child.y - end_node.y)**2)
+                child.g = current_node.g + 1 
+                child.h = math.sqrt((h_x)**2 + (h_y)**2) + h_direction   
+                #child.h = h_x + h_y + h_direction
+                child.f = child.g + 1.5*child.h
 
                 # Remove the following line when done with above
-                return None
+                # return None
 
                 ################################
 
@@ -197,14 +210,18 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is already in the open list
+                if child in open_list and child.g > max(node.g for node in open_list):
+                    continue 
 
                 # Add the child to the open list
-
+                heapq.heappush(open_list, child)
                 # Remove the following line when done with above
-                return None
+                # return None
                 
                 ################################
-
+        endTimer = time.perf_counter()
+        totalTime = "{:.5}".format(endTimer - startTimer)
+        print("Total Time: {:.5f} " + totalTime)
         warn("Could not find path: Path does not exist")
         return None
 
