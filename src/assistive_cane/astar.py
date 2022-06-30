@@ -90,15 +90,18 @@ class AStar(Planner):
         ####### Insert Code Here #######
         
         # Initialize both open and closed lists
-        open_list = None
-        closed_list = None
+        open_list = []
+        closed_list = []
         
         # Heapify the open_list
-
+        heapq.heapify(open_list)
+        
         # Add start node to heap
+        heapq.heappush(open_list, start_node)
 
+        #print(f'open_list: ${open_list}')
         # Remove the following line when done with above
-        return None
+        #return None
 
         ################################
 
@@ -128,12 +131,16 @@ class AStar(Planner):
             ####### Insert Code Here #######
 
             # Get the current node
-            current_node = None
+            current_node = heapq.heappop(open_list)
+            closed_list.append(current_node)
 
             # Found the goal
-            
+            if current_node == end_node:
+                #print('Hello World! :)')
+                return self.return_path(current_node)
+
             # Remove the following line when done with above
-            return None
+            #return None
 
             ################################
 
@@ -156,15 +163,19 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is on the closed list
+                if child in closed_list:
+                    continue
                 
                 # Remove the following line when done with above
-                return None
+                # return None
 
                 ################################
 
                 h_x = abs(child.x - end_node.x)
                 h_y = abs(child.y - end_node.y)
                 h_direction = abs(child.direction - end_node.direction)
+                h_euclid = math.sqrt(h_x**2 + h_y**2 + h_direction**2)
+                eps = .25
 
                 if h_direction == 3:
                     h_direction = 1
@@ -177,12 +188,12 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
-                child.g = None
-                child.h = None
-                child.f = None
+                child.g = current_node.g + 1 # cost of every action == 1
+                child.h = eps * (h_x + h_y + h_direction)
+                child.f = child.g + child.h
 
                 # Remove the following line when done with above
-                return None
+                # return None
 
                 ################################
 
@@ -197,11 +208,14 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is already in the open list
+                if child in open_list and all((child.g > otherNode.g for otherNode in open_list)):
+                    continue
 
                 # Add the child to the open list
+                heapq.heappush(open_list, child)
 
                 # Remove the following line when done with above
-                return None
+                # return None
                 
                 ################################
 
