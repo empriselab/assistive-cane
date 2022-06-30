@@ -90,15 +90,15 @@ class AStar(Planner):
         ####### Insert Code Here #######
         
         # Initialize both open and closed lists
-        open_list = None
-        closed_list = None
+        open_list = []
+        closed_list = []
         
         # Heapify the open_list
+        heapq.heapify(open_list)
 
         # Add start node to heap
-
+        heapq.heappush(open_list, start_node)
         # Remove the following line when done with above
-        return None
 
         ################################
 
@@ -128,12 +128,12 @@ class AStar(Planner):
             ####### Insert Code Here #######
 
             # Get the current node
-            current_node = None
+            current_node = heapq.heappop(open_list)
+            closed_list.append(current_node)
 
             # Found the goal
-            
-            # Remove the following line when done with above
-            return None
+            if(current_node == end_node):
+                return self.return_path(current_node)
 
             ################################
 
@@ -154,12 +154,10 @@ class AStar(Planner):
                     - Check if child is in closed list. If so continue to next iteration of for loop
                 """
                 ####### Insert Code Here #######
-
-                # Child is on the closed list
                 
-                # Remove the following line when done with above
-                return None
-
+                # Child is on the closed list
+                if child in closed_list:
+                    continue
                 ################################
 
                 h_x = abs(child.x - end_node.x)
@@ -177,12 +175,11 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
-                child.g = None
-                child.h = None
-                child.f = None
+                child.g = current_node.g + 1
+                child.h = h_x + h_y 
+                child.f = child.g + child.h
 
                 # Remove the following line when done with above
-                return None
 
                 ################################
 
@@ -197,11 +194,14 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is already in the open list
+                for open_node in open_list:
+                    if child in open_list and child.g > open_node.g:
+                        print("hey")
+                        continue
+                
 
                 # Add the child to the open list
-
-                # Remove the following line when done with above
-                return None
+                heapq.heappush(open_list, child)
                 
                 ################################
 
