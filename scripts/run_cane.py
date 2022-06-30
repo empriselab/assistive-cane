@@ -130,7 +130,7 @@ if __name__ == '__main__':
             print("Forward: ",forward_vibrator.value)
             print("Left: ",left_vibrator.value)
             print("Right: ",right_vibrator.value)
-            if ultra.distance < 0.3:
+            if ultra.distance < 0.2:
                 buzzer.on()
             else:
                 buzzer.off() 
