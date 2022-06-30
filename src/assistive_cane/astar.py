@@ -9,22 +9,16 @@ from assistive_cane.planner import Planner
 
 """
 Code Implementation Overview
-
 Day 1: None
-
 Day 2: None
-
 Day 3: TODO 1, TODO 2, TODO 3, TODO 4, TODO 5
-
 Day 4: None
-
 Day 5: Demo!
 """
 
 class AStar(Planner):
     """
     A class implementing AStar planner
-
     Attributes
     ----------
     world_size_x: int
@@ -35,7 +29,6 @@ class AStar(Planner):
         number of rows in grid (default 100)
     occupancy_grid_size_y: int
         numver of columns in grid (default 100)
-
     Methods
     -------
     plan(start_node, end_node)
@@ -61,21 +54,17 @@ class AStar(Planner):
     def plan(self, start_node, end_node):
         """
         Returns path from start_node to end_node if it exists, None otherwise
-
         Parameters
         ----------
         start_node: Node (see planner.py for details)
             start node in occupancy grid
         end_node: Node (see planner.py for details)
             goal node in occupancy grid
-
         Returns
         -------
         list
             list of nodes from start_node to end_node IF path exists
-
         OR
-
         None
             if path from start_node to end_node DOES NOT exist
         """
@@ -90,15 +79,14 @@ class AStar(Planner):
         ####### Insert Code Here #######
         
         # Initialize both open and closed lists
-        open_list = None
-        closed_list = None
+        open_list = []
+        closed_list = []
         
         # Heapify the open_list
+        heapq.heapify(open_list) 
 
         # Add start node to heap
-
-        # Remove the following line when done with above
-        return None
+        heapq.heappush(open_list, start_node)
 
         ################################
 
@@ -128,12 +116,12 @@ class AStar(Planner):
             ####### Insert Code Here #######
 
             # Get the current node
-            current_node = None
+            current_node = heapq.heappop(open_list)
+            closed_list.append(current_node)
 
             # Found the goal
-            
-            # Remove the following line when done with above
-            return None
+            if current_node == end_node:
+                return self.return_path(current_node)
 
             ################################
 
@@ -156,9 +144,8 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is on the closed list
-                
-                # Remove the following line when done with above
-                return None
+                if child in closed_list:
+                    continue
 
                 ################################
 
@@ -172,17 +159,14 @@ class AStar(Planner):
                 """
                 [Day 3] TODO 4: Implement the following:
                     - Create f, g, and h values for child
-                        NOTE: Combine h_x, h_y and h_direction as the heuristic 
+                        NOTE: sum h_x, h_y and h_direction as the heuristic 
                 """
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
-                child.g = None
-                child.h = None
-                child.f = None
-
-                # Remove the following line when done with above
-                return None
+                child.g = current_node.g + 1
+                child.h = h_x + h_y + h_direction
+                child.f = child.g + child.h
 
                 ################################
 
@@ -197,12 +181,12 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is already in the open list
+                if len([open_node for open_node in open_list if child == open_node and child.g > open_node.g]) > 0:
+                    continue
 
                 # Add the child to the open list
+                heapq.heappush(open_list, child)
 
-                # Remove the following line when done with above
-                return None
-                
                 ################################
 
         warn("Could not find path: Path does not exist")
@@ -218,5 +202,3 @@ class AStar(Planner):
                 break
             current = current.parent
         return path[::-1]  # Return reversed path
-
-

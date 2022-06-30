@@ -1,3 +1,6 @@
 <launch>
-  <node pkg="tf2_ros" type="static_transform_publisher" name="st_map2camera_link" args="1.108326 0.864889 2.654 -0.508088 0.491779 0.508088 0.491779 map camera_link" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2camera3_link" args="0.81151814 0.51437456 2.66741005 -0.50062786  0.49042299  0.4957031   0.51296733 map camera3_link" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2camera1_link" args="0.84490464 1.85915495 2.60990479 0.52021453 -0.50180022 -0.49511207 -0.48211763 map camera1_link" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2camera2_link" args="2.41201094 1.81755954 2.61764151 -0.507466    0.49236293  0.48712155  0.51261057 map camera2_link" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map2camera4_link" args="2.55338588 0.58948382 2.67340614 -0.49670071  0.54068894  0.47280935  0.48723217 map camera4_link" />
 </launch>
