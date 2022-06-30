@@ -90,15 +90,15 @@ class AStar(Planner):
         ####### Insert Code Here #######
         
         # Initialize both open and closed lists
-        open_list = None
-        closed_list = None
+        open_list = []
+        closed_list = []
         
         # Heapify the open_list
-
+        heapq.heapify(open_list)
         # Add start node to heap
-
+        heapq.heappush(open_list, start_node)
         # Remove the following line when done with above
-        return None
+      
 
         ################################
 
@@ -128,12 +128,15 @@ class AStar(Planner):
             ####### Insert Code Here #######
 
             # Get the current node
-            current_node = None
-
+            current_node = heapq.heappop(open_list)
+            closed_list.append(current_node)
             # Found the goal
-            
+            if current_node.__eq__(end_node):
+                print('This is the number of nodes of expansion:'+str(len(closed_list))+'\n')
+                return self.return_path(current_node)
+
             # Remove the following line when done with above
-            return None
+      
 
             ################################
 
@@ -156,9 +159,10 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Child is on the closed list
-                
+                if child in closed_list:
+                    continue
                 # Remove the following line when done with above
-                return None
+              
 
                 ################################
 
@@ -177,12 +181,13 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
-                child.g = None
-                child.h = None
-                child.f = None
+           
+                child.g = current_node.g+1
+                child.h = h_x+h_y+h_direction
+                child.f = child.g+5*child.h
 
                 # Remove the following line when done with above
-                return None
+          
 
                 ################################
 
@@ -195,13 +200,14 @@ class AStar(Planner):
                     - Add child to open list
                 """
                 ####### Insert Code Here #######
-
+                if child in open_list and child.g > max([x.g for x in open_list]):
+                    continue
                 # Child is already in the open list
-
+                else:
                 # Add the child to the open list
-
+                    heapq.heappush(open_list, child)
                 # Remove the following line when done with above
-                return None
+    
                 
                 ################################
 
