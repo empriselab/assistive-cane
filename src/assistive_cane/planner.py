@@ -112,6 +112,8 @@ class Node:
             return self.h > other.h
         return self.f > other.f
 
+        
+
 class Planner:
     def __init__(self, world_size_x, world_size_y, occupancy_grid_size_x = 100, occupancy_grid_size_y = 100):
 

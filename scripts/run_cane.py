@@ -46,7 +46,7 @@ class Ultrasonic:
         """
         ####### Insert Code Here #######
         
-        self.ultra = None
+        self.ultra = DistanceSensor(echo=6, trigger=13, max_distance=4)
         
         ################################
 
@@ -94,8 +94,9 @@ if __name__ == '__main__':
     ####### Insert Code Here #######
     
     # Initialize node
-    
+     rospy.init_node('smart_cane')
     # Create subscriber
+    rospy.Subscriber("/cane_command", cane_command_msg, cane_callback)
     
     ################################
 
@@ -110,13 +111,13 @@ if __name__ == '__main__':
     """
     ####### Insert Code Here #######
 
-    buzzer = None
-    forward_vibrator = None
-    right_vibrator = None
-    left_vibrator = None
+    buzzer = Buzzer(5)
+    forward_vibrator = PWMOutputDevice(27)
+    right_vibrator = PWMOutputDevice(22)
+    left_vibrator = PWMOutputDevice(17)
 
     # Remove the following line when done with above
-    exit()
+   
 
     ################################
     try:

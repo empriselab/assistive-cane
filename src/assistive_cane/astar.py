@@ -133,6 +133,7 @@ class AStar(Planner):
             # Found the goal
             if current_node.__eq__(end_node):
                 print('This is the number of nodes of expansion:'+str(len(closed_list))+'\n')
+                
                 return self.return_path(current_node)
 
             # Remove the following line when done with above
@@ -184,7 +185,7 @@ class AStar(Planner):
            
                 child.g = current_node.g+1
                 child.h = h_x+h_y+h_direction
-                child.f = child.g+5*child.h
+                child.f = child.g+1*child.h
 
                 # Remove the following line when done with above
           
