@@ -190,12 +190,11 @@ class AStar(Planner):
                 if child.direction == current_node.direction:
                     cost = 1
                 else:
-                    #cost = 3
                     cost = 3
 
                 child.g = current_node.g + cost # cost of every action == 1
-                child.h = eps * (h_x + h_y + h_direction)
-                child.f = child.g + child.h
+                child.h = h_x + h_y + h_direction
+                child.f = child.g + eps * child.h
 
                 # Remove the following line when done with above
                 # return None
