@@ -94,8 +94,10 @@ if __name__ == '__main__':
     ####### Insert Code Here #######
     
     # Initialize node
+    rospy.init_node(smart_cane)
     
     # Create subscriber
+    cane_command_subscriber=rospy.Subscriber("/cane_command",cane_command_msg,cane_callback())
     
     ################################
 
@@ -110,10 +112,10 @@ if __name__ == '__main__':
     """
     ####### Insert Code Here #######
 
-    buzzer = None
-    forward_vibrator = None
-    right_vibrator = None
-    left_vibrator = None
+    buzzer = Buzzer()
+    forward_vibrator = PWMOutputDevice()
+    right_vibrator = PWMOutputDevice()
+    left_vibrator = PWMOutputDevice()
 
     # Remove the following line when done with above
     exit()

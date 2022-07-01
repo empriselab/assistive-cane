@@ -189,8 +189,15 @@ class AStar(Planner):
                 ####### Insert Code Here #######
 
                 # Create the f, g, and h values
+                turn=0
+                if h_direction == 0:
+                        turn=0
+                else:
+                        turn=1
+                
                 child.g = current_node.g + 1
-                child.h = math.sqrt(h_x**2+h_y**2)
+                #child.h = math.sqrt(h_x**2+h_y**2)
+                child.h =h_x+h_y+turn
                 child.f = child.g+child.h*(2.5) 
 
                 # Remove the following line when done with above
