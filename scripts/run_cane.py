@@ -1,9 +1,8 @@
 import time
 import rospy
-from gpiozero import DistanceSensor, PWMOutputDevice
+from gpiozero import DistanceSensor, PWMOutputDevice, Buzzer
 from assistive_cane.msg import cane_command_msg
 import RPi.GPIO as GPIO
-from gpiozero import Buzzer
 from threading import Lock
 
 cane_lock = Lock()
@@ -102,7 +101,7 @@ if __name__ == '__main__':
     """
     [Day 4] TODO 2: Integrate with Raspberry Pi
         - Select the correct PIN values for the following variables:
-            - buzzer
+            - buzzer - 
             - forward_vibrator
             - right_vibrator
             - left_vibrator
@@ -110,10 +109,14 @@ if __name__ == '__main__':
     """
     ####### Insert Code Here #######
 
-    buzzer = None
-    forward_vibrator = None
-    right_vibrator = None
-    left_vibrator = None
+    buzzer = Buzzer(5)
+    forward_vibrator = PWMOutputDevice(27)
+    right_vibrator = PWMOutputDevice(22)
+    left_vibrator = PWMOutputDevice(17)
+
+    forward_vibrator.value = cane_command.vibration_forward
+    right_vibrator.value = cane_command.vibration_right
+    left_vibrator.value = cane_command.vibration_left
 
     # Remove the following line when done with above
     exit()

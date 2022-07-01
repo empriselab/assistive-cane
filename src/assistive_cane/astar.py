@@ -2,7 +2,7 @@
 
 import math
 import rospy
-import time # we added this
+# import time # we added this
 
 from warnings import warn
 import heapq
@@ -111,7 +111,7 @@ class AStar(Planner):
         max_iterations = 1000000
 
         # Loop until you find the end
-        startTimer = time.perf_counter()
+        # startTimer = time.perf_counter()
         while len(open_list) > 0:
 
             outer_iterations += 1
@@ -137,6 +137,7 @@ class AStar(Planner):
             # Get the current node
             current_node = heapq.heappop(open_list)
             closed_list.append(current_node)
+           
             # Found the goal
             if current_node == end_node:
                 return self.return_path(current_node)
@@ -165,7 +166,8 @@ class AStar(Planner):
 
                 # Child is on the closed list
                 if child in closed_list:
-                    continue
+                     continue
+            
                 
                 # Remove the following line when done with above
         
@@ -190,8 +192,8 @@ class AStar(Planner):
                 # child.g = current_node.g + math.sqrt((child.x - current_node.x)**2 + (child.y - current_node.y)**2)
                 # child.h = math.sqrt((child.x - end_node.x)**2 + (child.y - end_node.y)**2)
                 child.g = current_node.g + 1 
-                child.h = math.sqrt((h_x)**2 + (h_y)**2) + h_direction   
-                #child.h = h_x + h_y + h_direction
+                #child.h = math.sqrt((h_x)**2 + (h_y)**2) + h_direction   
+                child.h = h_x + h_y + h_direction
                 child.f = child.g + 1.5*child.h
 
                 # Remove the following line when done with above
@@ -219,10 +221,10 @@ class AStar(Planner):
                 # return None
                 
                 ################################
-        endTimer = time.perf_counter()
-        totalTime = "{:.5}".format(endTimer - startTimer)
-        print("Total Time: {:.5f} " + totalTime)
-        warn("Could not find path: Path does not exist")
+        # endTimer = time.perf_counter()
+        # totalTime = "{:.5}".format(endTimer - startTimer)
+        # print("Total Time: {:.5f} " + totalTime)
+        # warn("Could not find path: Path does not exist")
         return None
 
     def return_path(self, current_node):
